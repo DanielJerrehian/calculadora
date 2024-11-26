@@ -32,15 +32,14 @@ class Logic:
         if self.operation:
             self.calculate()
         self.operation = operation
-        if len(self.values) == self.length:
-            try:
-                self.values.append(int(self.label.cget("text")))
-                self.length = len(self.values)
-            except ValueError:
-                self.values.append(self.answer)
-            self.concatenate = False
-            self.label.configure(text="")
-            self.label.configure(text=self.values[len(self.values) - 1])
+        try:
+            self.values.append(int(self.label.cget("text")))
+            self.length = len(self.values)
+        except ValueError:
+            self.values.append(self.answer)
+        self.concatenate = False
+        self.label.configure(text="")
+        self.label.configure(text=self.values[len(self.values) - 1])
 
     def calculate(self):
         self.concatenate = False
