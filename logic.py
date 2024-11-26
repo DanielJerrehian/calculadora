@@ -14,29 +14,33 @@ class Logic:
         self.answer = None
         self.last_input_was_operator = False
 
-    def insert(self, digit: int):
+    def insert(self, value: str):
         self.last_input_was_operator = False
         if self.concatenate:
             current = self.label.cget("text")
-            number = f"{current}{digit}"
+            if value == "." and value in str(current):
+                return
+            number = f"{current}{value}"
             self.label.configure(text=number)
         else:
             self.concatenate = True
-            self.label.configure(text=digit)
+            self.label.configure(text=value)
 
     def restart(self) -> None:
         self.values.clear()
-        self.operation = None
         self.length = len(self.values)
-        self.label.configure(text="")
+        self.operation = None
+        self.concatenate = True
+        self.answer = None
         self.last_input_was_operator = False
+        self.label.configure(text="")
 
     def perform(self, operation: str):
         if not self.last_input_was_operator:
             if self.operation:
                 self.calculate()
             try:
-                self.values.append(int(self.label.cget("text")))
+                self.values.append(float(self.label.cget("text")))
                 self.length = len(self.values)
             except ValueError:
                 self.values.append(self.answer)
@@ -47,7 +51,7 @@ class Logic:
 
     def calculate(self):
         self.concatenate = False
-        self.values.append(int(self.label.cget("text")))
+        self.values.append(float(self.label.cget("text")))
         self.length = len(self.values)
         if self.operation:
             try:
