@@ -12,8 +12,10 @@ class Logic:
         self.operation = None
         self.concatenate = True
         self.answer = None
+        self.last_input_was_operator = False
 
     def insert(self, digit: int):
+        self.last_input_was_operator = False
         if self.concatenate:
             current = self.label.cget("text")
             number = f"{current}{digit}"
@@ -27,19 +29,21 @@ class Logic:
         self.operation = None
         self.length = len(self.values)
         self.label.configure(text="")
+        self.last_input_was_operator = False
 
     def perform(self, operation: str):
-        if self.operation:
-            self.calculate()
+        if not self.last_input_was_operator:
+            if self.operation:
+                self.calculate()
+            try:
+                self.values.append(int(self.label.cget("text")))
+                self.length = len(self.values)
+            except ValueError:
+                self.values.append(self.answer)
+            self.concatenate = False
+            self.label.configure(text=self.values[-1])
         self.operation = operation
-        try:
-            self.values.append(int(self.label.cget("text")))
-            self.length = len(self.values)
-        except ValueError:
-            self.values.append(self.answer)
-        self.concatenate = False
-        self.label.configure(text="")
-        self.label.configure(text=self.values[len(self.values) - 1])
+        self.last_input_was_operator = True
 
     def calculate(self):
         self.concatenate = False
@@ -56,3 +60,4 @@ class Logic:
             self.values.clear()
             self.length = len(self.values)
             self.operation = None
+            self.last_input_was_operator = False
