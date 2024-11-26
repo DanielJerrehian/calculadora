@@ -1,8 +1,8 @@
 from functools import reduce
 from decimal import Decimal
 
-from operations import operations
-from ui import UiController
+from src.utils.operations import operations
+from src.ui import UiController
 
 
 class LogicController:

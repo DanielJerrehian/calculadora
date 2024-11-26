@@ -1,10 +1,10 @@
-from app import App
-from button import GuiButton
-from label import GuiLabel
+from src.app import App
+from src.gui.button import GuiButton
+from src.gui.label import GuiLabel
 
-from ui import UiController
-from logic import LogicController
-from operations import operations
+from src.ui import UiController
+from src.logic import LogicController
+from src.utils.operations import operations
 
 
 def main(title: str):
