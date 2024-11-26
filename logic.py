@@ -16,15 +16,12 @@ class Logic:
 
     def insert(self, value: str):
         self.last_input_was_operator = False
-        if self.concatenate:
-            current = self.label.cget("text")
-            if value == "." and value in str(current):
-                return
-            number = f"{current}{value}"
-            self.label.configure(text=number)
-        else:
-            self.concatenate = True
-            self.label.configure(text=value)
+        current = self.label.cget("text")
+        if value == "." and value in str(current) and self.concatenate:
+            return
+        text = f"{current}{value}" if self.concatenate else value
+        self.concatenate = True
+        self.label.configure(text=text)
 
     def restart(self) -> None:
         self.values.clear()
@@ -36,32 +33,36 @@ class Logic:
         self.label.configure(text="")
 
     def perform(self, operation: str):
-        if not self.last_input_was_operator:
-            if self.operation:
-                self.calculate()
-            try:
-                self.values.append(float(self.label.cget("text")))
-                self.length = len(self.values)
-            except ValueError:
-                self.values.append(self.answer)
-            self.concatenate = False
-            self.label.configure(text=self.values[-1])
+        if self.last_input_was_operator:
+            self.operation = operation
+            self.last_input_was_operator = True
+            return
+        if self.operation:
+            self.calculate()
+        try:
+            self.values.append(float(self.label.cget("text")))
+            self.length = len(self.values)
+        except ValueError:
+            self.values.append(self.answer)
+        self.concatenate = False
         self.operation = operation
         self.last_input_was_operator = True
+        self.label.configure(text=self.values[-1])
 
     def calculate(self):
         self.concatenate = False
         self.values.append(float(self.label.cget("text")))
         self.length = len(self.values)
-        if self.operation:
-            try:
-                self.answer = reduce(operations[self.operation]["calculation"], self.values)
-                self.label.configure(text=str(self.answer))
-            except ZeroDivisionError:
-                self.label.configure(text="Error: Division by Zero")
-                self.values.pop(len(self.values) - 1)
-                self.length = len(self.values)
-            self.values.clear()
+        if not self.operation:
+            return
+        try:
+            self.answer = reduce(operations[self.operation]["calculation"], self.values)
+            self.label.configure(text=str(self.answer))
+        except ZeroDivisionError:
+            self.label.configure(text="Error: Division by Zero")
+            self.values.pop(len(self.values) - 1)
             self.length = len(self.values)
-            self.operation = None
-            self.last_input_was_operator = False
+        self.values.clear()
+        self.length = len(self.values)
+        self.operation = None
+        self.last_input_was_operator = False
