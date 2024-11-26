@@ -1,5 +1,6 @@
 from customtkinter import CTkLabel
 from functools import reduce
+from decimal import Decimal
 
 from operations import operations
 
@@ -40,7 +41,7 @@ class Logic:
         if self.operation:
             self.calculate()
         try:
-            self.values.append(float(self.label.cget("text")))
+            self.values.append(Decimal(self.label.cget("text")))
             self.length = len(self.values)
         except ValueError:
             self.values.append(self.answer)
@@ -51,7 +52,7 @@ class Logic:
 
     def calculate(self):
         self.concatenate = False
-        self.values.append(float(self.label.cget("text")))
+        self.values.append(Decimal(self.label.cget("text")))
         self.length = len(self.values)
         if not self.operation:
             return
