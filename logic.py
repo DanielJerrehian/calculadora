@@ -45,13 +45,14 @@ class Logic:
         self.concatenate = False
         self.values.append(int(self.label.cget("text")))
         self.length = len(self.values)
-        try:
-            self.answer = reduce(operations[self.operation]["calculation"], self.values)
-            self.label.configure(text=str(self.answer))
-        except ZeroDivisionError:
-            self.label.configure(text="Error: Division by Zero")
-            self.values.pop(len(self.values) - 1)
+        if self.operation:
+            try:
+                self.answer = reduce(operations[self.operation]["calculation"], self.values)
+                self.label.configure(text=str(self.answer))
+            except ZeroDivisionError:
+                self.label.configure(text="Error: Division by Zero")
+                self.values.pop(len(self.values) - 1)
+                self.length = len(self.values)
+            self.values.clear()
             self.length = len(self.values)
-        self.values.clear()
-        self.length = len(self.values)
-        self.operation = None
+            self.operation = None
