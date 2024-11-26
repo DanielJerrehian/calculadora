@@ -1,7 +1,9 @@
 from app import App
 from button import GuiButton
 from label import GuiLabel
-from logic import Logic
+
+from ui import UiController
+from logic import LogicController
 from operations import operations
 
 
@@ -9,7 +11,8 @@ def main(title: str):
     app = App(title=title).create()
     label = GuiLabel().create(app=app)
     label.grid(row=0, column=0, columnspan=4, sticky="ew")
-    logic = Logic(label=label)
+    ui = UiController(label=label)
+    logic = LogicController(ui=ui)
 
     GuiButton().create(app=app, text=str(0), command=lambda: logic.insert(0)).grid(row=5, column=0, columnspan=2, padx=0.5, pady=0.5, sticky="ew")
     GuiButton().create(app=app, text=str("."), command=lambda: logic.insert(".")).grid(row=5, column=2, padx=0.5, pady=0.5)
