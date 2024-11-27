@@ -39,19 +39,21 @@ class LogicController:
         if self.operation:
             self.calculate()
         try:
-            self.values.append(Decimal(self.ui.get()))
+            if self.ui.get():
+                self.values.append(Decimal(self.ui.get()))
         except ValueError:
             self.values.append(self.answer)
         self.concatenate = False
         self.operation = operation
         self.last_input_was_operator = True
-        self.ui.set(text=self.values[-1])
+        if self.ui.get():
+            self.ui.set(text=self.values[-1])
 
     def calculate(self):
         self.concatenate = False
-        self.values.append(Decimal(self.ui.get()))
         if not self.operation:
             return
+        self.values.append(Decimal(self.ui.get()))
         try:
             self.answer = reduce(operations[self.operation]["calculation"], self.values)
             self.ui.set(text=str(self.answer))
