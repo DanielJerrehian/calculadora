@@ -61,3 +61,6 @@ class LogicController:
         self.values.clear()
         self.operation = None
         self.last_input_was_operator = False
+
+    def percentage(self):
+        self.ui.set(text=f"{self.answer*100}%")
