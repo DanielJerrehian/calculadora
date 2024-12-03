@@ -1,5 +1,6 @@
 from operator import add, sub, mul, truediv
 
+
 operations = {
     "addition": {"calculation": add, "symbol": "+", "row": 4},
     "subtraction": {"calculation": sub, "symbol": "-", "row": 3},

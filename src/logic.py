@@ -23,13 +23,20 @@ class LogicController:
         self.concatenate = True
         self.ui.set(text=text)
 
-    def restart(self) -> None:
-        self.values.clear()
+    def calculate(self):
+        self.concatenate = False
+        if not self.operation:
+            return
+        self.values.append(Decimal(self.ui.get()))
+        try:
+            self.answer = reduce(operations[self.operation]["calculation"], self.values)
+            self.ui.set(text=str(self.answer))
+            self.values.clear()
+        except ZeroDivisionError:
+            self.ui.set(text="Error: Division by Zero")
+            self.values.pop(len(self.values) - 1)
         self.operation = None
-        self.concatenate = True
-        self.answer = None
         self.last_input_was_operator = False
-        self.ui.set(text="")
 
     def perform(self, operation: str):
         if self.last_input_was_operator:
@@ -41,7 +48,7 @@ class LogicController:
         try:
             if self.ui.get():
                 self.values.append(Decimal(self.ui.get()))
-        except ValueError:
+        except:
             self.values.append(self.answer)
         self.concatenate = False
         self.operation = operation
@@ -49,20 +56,26 @@ class LogicController:
         if self.ui.get():
             self.ui.set(text=self.values[-1])
 
-    def calculate(self):
-        self.concatenate = False
-        if not self.operation:
-            return
-        self.values.append(Decimal(self.ui.get()))
-        try:
-            self.answer = reduce(operations[self.operation]["calculation"], self.values)
-            self.ui.set(text=str(self.answer))
-        except ZeroDivisionError:
-            self.ui.set(text="Error: Division by Zero")
-            self.values.pop(len(self.values) - 1)
+    def percentage(self):
+        if not self.answer:
+            try:
+                self.answer = self.ui.get()
+            except:
+                return
+        self.ui.set(text=f"{self.answer*100}%")
+
+    # def negate(self):
+    #     current = self.ui.get()
+    #     if not current:
+    #         self.insert(value="-")
+    #         return
+    #     inversion = Decimal(current) * -1
+    #     self.ui.set(text=inversion)
+
+    def restart(self) -> None:
         self.values.clear()
         self.operation = None
+        self.concatenate = True
+        self.answer = None
         self.last_input_was_operator = False
-
-    def percentage(self):
-        self.ui.set(text=f"{self.answer*100}%")
+        self.ui.set(text="")
