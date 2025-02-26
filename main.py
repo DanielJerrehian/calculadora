@@ -16,9 +16,6 @@ def main(title: str):
     clear = factory.button(text="Clear", command=logic.restart)
     factory.grid(component=clear, **{"row": 1, "column": 0, "columnspan": 2})
 
-    # negative = factory.button(text="±", command=logic.negate)
-    # factory.grid(component=negative, **{"row": 1, "column": 1})
-
     percentage = factory.button(text="%", command=logic.percentage)
     factory.grid(component=percentage, **{"row": 1, "column": 2})
 

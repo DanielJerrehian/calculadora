@@ -30,7 +30,8 @@ class LogicController:
         self.values.append(Decimal(self.ui.get()))
         try:
             self.answer = reduce(operations[self.operation]["calculation"], self.values)
-            self.ui.set(text=str(self.answer))
+            formatted = self._format(text=f"{self.answer:.8f}") if len(str(self.answer)) >= 8 else self._format(text=f"{self.answer}")
+            self.ui.set(text=formatted)
             self.values.clear()
         except ZeroDivisionError:
             self.ui.set(text="Error: Division by Zero")
@@ -54,23 +55,15 @@ class LogicController:
         self.operation = operation
         self.last_input_was_operator = True
         if self.ui.get():
-            self.ui.set(text=self.values[-1])
+            self.ui.set(text=str(self.values[-1]))
 
     def percentage(self):
         if not self.answer:
             try:
-                self.answer = self.ui.get()
+                self.answer = Decimal(self.ui.get())
             except:
                 return
         self.ui.set(text=f"{self.answer*100}%")
-
-    # def negate(self):
-    #     current = self.ui.get()
-    #     if not current:
-    #         self.insert(value="-")
-    #         return
-    #     inversion = Decimal(current) * -1
-    #     self.ui.set(text=inversion)
 
     def restart(self) -> None:
         self.values.clear()
@@ -79,3 +72,19 @@ class LogicController:
         self.answer = None
         self.last_input_was_operator = False
         self.ui.set(text="")
+
+    def _format(self, text: str) -> str:
+        if "." not in text:
+            return text
+        values = text.split(".")
+        integer = values[0]
+        decimal = list(values[1])[::-1]
+        count = 0
+        for character in decimal:
+            if character == "0":
+                count = count + 1
+            else:
+                break
+        decimal = "".join(decimal[count:][::-1])
+        text = f"{integer}.{decimal}" if decimal else integer
+        return text

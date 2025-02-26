@@ -133,3 +133,39 @@ def test_restart(mock):
     mock.set.assert_called_once_with(text="")
     mock.get.return_value = ""
     assert logic.ui.get() == ""
+
+
+def test__format_decimal_ends_with_trailing_zeros(mock):
+    logic = LogicController(ui=mock)
+    result = logic._format(text="5.300000")
+    assert result == "5.3"
+
+
+def test__format_decimal_starts_with_integer_ends_with_integer(mock):
+    logic = LogicController(ui=mock)
+    result = logic._format(text="5.3000004")
+    assert result == "5.3000004"
+
+
+def test__format_decimal_starts_with_zero_ends_with_integer(mock):
+    logic = LogicController(ui=mock)
+    result = logic._format(text="5.0004")
+    assert result == "5.0004"
+
+
+def test__format_decimal_only_integer(mock):
+    logic = LogicController(ui=mock)
+    result = logic._format(text="5.00000000")
+    assert result == "5"
+
+
+def test__format_decimal_starts_with_zero(mock):
+    logic = LogicController(ui=mock)
+    result = logic._format(text="0.00004")
+    assert result == "0.00004"
+
+
+def test__format_no_decimal(mock):
+    text = "492"
+    logic = LogicController(ui=mock)
+    assert logic._format(text=text) == text
